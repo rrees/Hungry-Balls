@@ -72,7 +72,10 @@
 	newpb (vmul (- (vlen move)) (vunit (vadd connector disp)))]
     (assoc ball :vx (first newpb) :vy (second newpb))))
     
-(defn eat [ball other-ball] (assoc ball :radius 0) )
+(defn eat [ball other-ball] 
+(if (< (:radius ball) (:radius other-ball))
+  (assoc ball :radius 0)
+  ball ))
 
 (defn mutual-collisions [balls]
   (map
