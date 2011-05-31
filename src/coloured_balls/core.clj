@@ -71,13 +71,15 @@
 	disp (vsub connector (vunit move))
 	newpb (vmul (- (vlen move)) (vunit (vadd connector disp)))]
     (assoc ball :vx (first newpb) :vy (second newpb))))
+    
+(defn eat [ball other-ball] (assoc ball :radius 0) )
 
 (defn mutual-collisions [balls]
   (map
    (fn [b]
      (let [crash (some #(if (and (not= % b) (collides? % b)) % nil) balls)]
-       (if (not (nil? crash))
-	 (reflect b crash)
+      (if (not (nil? crash))
+        (eat (reflect b crash) crash)
 	 b)))
    balls))
 
