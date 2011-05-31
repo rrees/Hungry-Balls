@@ -9,16 +9,22 @@
 ;; see effects immediately
 (defstruct ball :x :y :vx :vy :red :blue :green :radius)
 
+(def screen-size 800)
+
+(def initial-max-size 30)
+
+(def no-balls 100)
+
 (defn draw-ball [ball]
 	(fill (:red ball) (:green ball) (:blue ball))
 	(ellipse (:x ball) (:y ball) (:radius ball) (:radius ball)))
 
 (defn make-ball []
-  (struct-map ball :x (rand-int 400) :y (rand-int 400)
+  (struct-map ball :x (rand-int screen-size) :y (rand-int screen-size)
 	      :vx (- (* 2 (rand-int 5)) 5) :vy (-  (* 2 (rand-int 5)) 5)
-	      :red (rand-int 256) :blue (rand-int 256) :green (rand-int 256) :radius (rand-int 70)))
+	      :red (rand-int 256) :blue (rand-int 256) :green (rand-int 256) :radius (rand-int initial-max-size)))
 
-(def no-balls 10)
+
 (def ball-state (atom (take no-balls (repeatedly make-ball))))
 
 (defn move [ball]
@@ -87,12 +93,17 @@
 	 b)))
    balls))
 
+(defn remove-empty-balls [balls]
+  (filter #(< 0 (:radius %)) balls)
+)
+
 (defn draw
   "Example usage of with-translation and with-rotation."
   []
 
   (swap! ball-state #(map (comp move collide) %))
   (swap! ball-state mutual-collisions)
+  (swap! ball-state remove-empty-balls)
   
   
   (background 226)
@@ -109,6 +120,6 @@
 ;; Now we just need to define an applet:
 
 (defapplet balls :title "Coloured balls"
-  :setup setup :draw draw :size [400 400])
+  :setup setup :draw draw :size [screen-size screen-size])
 
 (run balls)
