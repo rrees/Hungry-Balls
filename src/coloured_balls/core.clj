@@ -39,9 +39,9 @@
 	bounce-negative (fn [key] (update-in ball [key] #(- (Math/abs %))))]     
     (cond
      (< (:x ball) (/ (:radius ball) 2))  (bounce-positive :vx)
-     (< (- 400 (:x ball)) (/ (:radius ball) 2)) (bounce-negative :vx)
+     (< (- screen-size (:x ball)) (/ (:radius ball) 2)) (bounce-negative :vx)
      (< (:y ball) (/ (:radius ball) 2)) (bounce-positive :vy) 
-     (< (- 400 (:y ball)) (/ (:radius ball) 2)) (bounce-negative :vy)
+     (< (- screen-size (:y ball)) (/ (:radius ball) 2)) (bounce-negative :vy)
      :otherwise ball)))
 
 (defn collides? [b1 b2]
@@ -81,7 +81,7 @@
 (defn eat [ball other-ball]
 (let [ball-radius (:radius ball)
   other-ball-radius (:radius other-ball)]
-  (assoc ball :radius (if (< ball-radius other-ball-radius) 0 (+ ball-radius other-ball-radius)))
+  (assoc ball :radius (if (< ball-radius other-ball-radius) (- ball-radius 1) (+ ball-radius 1)))
 ))
 
 (defn mutual-collisions [balls]
