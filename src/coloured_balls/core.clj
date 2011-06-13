@@ -81,8 +81,8 @@
 (defn eat [ball other-ball]
 (let [ball-radius (:radius ball)
   other-ball-radius (:radius other-ball)]
-  (assoc ball :radius (if (< ball-radius other-ball-radius) (- ball-radius 1) (+ ball-radius 1)))
-))
+  (assoc ball :radius (if (< ball-radius other-ball-radius) (- ball-radius (quot ball-radius 4)) 
+(+ ball-radius (quot other-ball-radius 4))))))
 
 (defn mutual-collisions [balls]
   (map
